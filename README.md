@@ -2,6 +2,7 @@
 
 Starter project of oat++ (AKA oatpp) application as threaded task in another application. Based on oatpp Multithreaded (Simple) API.
 This example project packs 6 different ways to start (and stop) a Oat++ server in a thread. Every way is packed in its own `App_<example>` and binary.
+For most users `StopSimple` or `StopByConditionCheck` are the best solution.
 
 See more:
 
@@ -25,7 +26,7 @@ See more:
 |    |- App_StopByConditionCheck.cpp     // Oat++ in a thread stopped by checking a condition
 |    |- App_StopWithFullEnclosure.cpp    // Complete Oat++ Environment encapsuled in a thread
 |    |- App_StopByConditionWithFullEnclosure.cpp    // Complete Oat++ Environment encapsuled in a thread with condition API
-|    |- App_RunAndStopInFunctions.cpp    // Like StopByConditionCheck but encapsuled in handy functions
+|    |- App_RunAndStopInFunctions.cpp    // Like StopByConditionWithFullEnclosure but encapsuled in handy functions
 |
 |- test/                                 // test folder
 |- utility/install-oatpp-modules.sh      // utility script to install required oatpp-modules.  
@@ -57,7 +58,7 @@ Because the "StopWithFullEnclosure" requires some synchronisation to keep everyt
 instead of a call to `stop()` can greatly reduce the footprint for the full enclosure.
 
 ### Example "RunAndStopInFunctions"
-Example "StopByConditionCheck" extended by encapsulating starting and stopping of the server in small and handy functions.
+Example "StopByConditionWithFullEnclosure" extended by encapsulating starting and stopping of the server in small and handy functions.
 
 ---
 
