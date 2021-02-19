@@ -5,6 +5,14 @@
 
 #include <iostream>
 
+void myBackendLogicDummy() {
+    OATPP_LOGI("MyBackend", "Press enter to continue the loop");
+    std::cin.ignore();
+}
+
+/**
+ * This example shows how to start the server and stop it gracefully with a call to stop().
+ */
 void run() {
 
   /* Register Components in scope of run() method */
@@ -26,12 +34,29 @@ void run() {
   /* Create server which takes provided TCP connections and passes them to HTTP connection handler */
   oatpp::network::Server server(connectionProvider, connectionHandler);
 
-  /* Priny info about server port */
+  std::thread oatppThread([&server] {
+    /* Run server */
+    server.run();
+  });
+
+  /* Print info about server port */
   OATPP_LOGI("MyApp", "Server running on port %s", connectionProvider->getProperty("port").getData());
 
-  /* Run server */
-  server.run();
-  
+  /* ToDo: Call your logic here! We are just calling some blocking dummy logic here */
+  myBackendLogicDummy();
+
+  /* Check if server is still running and stop it if needed */
+  if (server.getStatus() == oatpp::network::Server::STATUS_RUNNING) {
+    server.stop();
+  }
+
+  /* Check if the thread has already stopped or if we need to wait for the server to stop */
+  if(oatppThread.joinable()) {
+
+    /* We need to wait until the thread is done */
+    oatppThread.join();
+  }
+
 }
 
 /**
