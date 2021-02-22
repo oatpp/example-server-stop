@@ -58,8 +58,14 @@ void run() {
   /* ToDo: Call your logic here! We are just calling some blocking dummy logic here */
   myBackendLogicDummy();
 
+  /* First, stop the ServerConnectionProvider so we don't accept any new connections */
+  connectionHandler->stop();
+
   /* Signal the stop condition */
   server_should_continue.store(false);
+
+  /* Finally, stop the ConnectionHandler and wait until all running connections are closed */
+  connectionHandler->stop();
 
   /* Check if the thread has already stopped or if we need to wait for the server to stop */
   if(oatppThread.joinable()) {

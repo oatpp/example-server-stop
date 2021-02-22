@@ -64,6 +64,12 @@ void run() {
 
       /* Run server */
       serverPtr->run(condition);
+
+      /* Server has shut down, so we dont want to connect any new connections */
+      connectionProvider->stop();
+
+      /* Now stop the connection handler and wait until all running connections are served */
+      connectionHandler->stop();
     }
 
     /* Print how much objects were created during app running, and what have left-probably leaked */

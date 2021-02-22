@@ -13,6 +13,12 @@ std::mutex server_op_mutex;
 std::atomic_bool server_should_continue;
 std::thread oatppThread;
 
+/**
+ * You can't run two of those threads in one application concurrently in this setup. Especially with the AppComponents inside the
+ * Threads scope. If you want to run multiple threads with multiple servers you either have to manage the components
+ * by yourself and do not rely on the OATPP_COMPONENT mechanism or have one process-global AppComponent.
+ * Further you have to make sure you don't have multiple ServerConnectionProvider listening to the same port.
+ */
 void StartOatppServer() {
   std::lock_guard<std::mutex> lock(server_op_mutex);
 
@@ -60,6 +66,12 @@ void StartOatppServer() {
     OATPP_LOGI("MyApp", "Server running on port %s", connectionProvider->getProperty("port").getData());
 
     server.run(condition);
+
+    /* Server has shut down, so we dont want to connect any new connections */
+    connectionProvider->stop();
+
+    /* Now stop the connection handler and wait until all running connections are served */
+    connectionHandler->stop();
   });
 }
 

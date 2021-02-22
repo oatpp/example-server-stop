@@ -30,6 +30,12 @@ void run() {
   std::unique_lock<std::mutex> race_guard_lock(race_guard_mutex);
   bool ready = false;
 
+  /**
+   * You can't run two of those threads in one application concurrently in this setup. Especially with the AppComponents inside the
+   * Threads scope. If you want to run multiple threads with multiple servers you either have to manage the components
+   * by yourself and do not rely on the OATPP_COMPONENT mechanism or have one process-global AppComponent.
+   * Further you have to make sure you don't have multiple ServerConnectionProvider listening to the same port.
+   */
   std::thread oatppThread([&weakServerPtr, &race_guard, &ready] {
 
     /* Init Oat++ Environment in the scope of the thread */
@@ -67,6 +73,12 @@ void run() {
 
       /* Run server */
       serverPtr->run();
+
+      /* Server has shut down, so we dont want to connect any new connections */
+      connectionProvider->stop();
+
+      /* Now stop the connection handler and wait until all running connections are served */
+      connectionHandler->stop();
     }
 
     /* Print how much objects were created during app running, and what have left-probably leaked */
