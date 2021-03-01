@@ -59,7 +59,7 @@ void run() {
   myBackendLogicDummy();
 
   /* First, stop the ServerConnectionProvider so we don't accept any new connections */
-  connectionHandler->stop();
+  connectionProvider->stop();
 
   /* Signal the stop condition */
   server_should_continue.store(false);

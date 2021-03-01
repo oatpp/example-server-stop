@@ -46,7 +46,7 @@ void run() {
   myBackendLogicDummy();
 
   /* First, stop the ServerConnectionProvider so we don't accept any new connections */
-  connectionHandler->stop();
+  connectionProvider->stop();
 
   /* Now, check if server is still running and stop it if needed */
   if (server.getStatus() == oatpp::network::Server::STATUS_RUNNING) {
